@@ -1,6 +1,6 @@
 package com.epam.university.java.core.task001;
 
-public class ImplTask001 implements Task001 {
+public class Task001Impl implements Task001 {
     @Override
     public double addition(String firstNumber, String secondNumber) {
         return 0;
