@@ -42,7 +42,7 @@ public class Task003Impl implements Task003 {
 
     @Override
     public String[] filter(String[] source, FilteringCondition condition) {
-        checkArguments(source);
+        checkArguments(source, condition);
         ArrayList<String> result = new ArrayList<>();
         for (int i = 0, j = 0; i < source.length; i++) {
             if (condition.isValid(source[i])) {
@@ -55,17 +55,17 @@ public class Task003Impl implements Task003 {
     }
 
     @Override
-    public String[] removeElements(String[] source, String[] toRemote) {
-        checkArguments(source, toRemote);
+    public String[] removeElements(String[] source, String[] toRemove) {
+        checkArguments(source, toRemove);
         ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(source));
-        arrayList.removeAll(Arrays.asList(toRemote));
+        arrayList.removeAll(Arrays.asList(toRemove));
         String[] r = new String[arrayList.size()];
         return arrayList.toArray(r);
     }
 
     @Override
     public String[] map(String[] source, MappingOperation operation) {
-        checkArguments(source);
+        checkArguments(source, operation);
         for (int i = 0; i < source.length; i++) {
             source[i] = operation.map(source[i]);
         }
@@ -74,7 +74,7 @@ public class Task003Impl implements Task003 {
 
     @Override
     public String[] flatMap(String[] source, FlatMappingOperation operation) {
-        checkArguments(source);
+        checkArguments(source, operation);
         ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 0; i < source.length; i++) {
             arrayList.addAll(Arrays.asList(operation.flatMap(source[i])));
@@ -108,6 +108,24 @@ public class Task003Impl implements Task003 {
 
     private void checkArguments(String[] first, String[] second) {
         if (first == null || second == null) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void checkArguments(String[] source, FlatMappingOperation operation) {
+        if (source == null || operation == null) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void checkArguments(String[] source, FilteringCondition operation) {
+        if (source == null || operation == null) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void checkArguments(String[] source, MappingOperation operation) {
+        if (source == null || operation == null) {
             throw new IllegalArgumentException();
         }
     }
