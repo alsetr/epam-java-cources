@@ -1,5 +1,7 @@
 package com.epam.university.java.core.task002;
 
+import java.util.Arrays;
+
 public class Task002Impl implements Task002 {
     @Override
     public boolean isEquals(String firstString, String secondString) {
@@ -72,7 +74,7 @@ public class Task002Impl implements Task002 {
 
     private void checkArguments(String[] sourceCollection, String glue) {
         if (sourceCollection == null || sourceCollection.length == 0
-                || glue == null) {
+                || glue == null || Arrays.asList(sourceCollection).contains(null)) {
             throw new IllegalArgumentException();
         }
     }

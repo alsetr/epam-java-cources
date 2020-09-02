@@ -9,14 +9,29 @@ public class Task006Impl implements Task006 {
         if (measurements == null) {
             throw new IllegalArgumentException();
         }
-        Iterator<Measurement> iterator = measurements.iterator();
-        double numerator = 0;
-        double denominator = 0;
-        while (iterator.hasNext()) {
-            Measurement current = iterator.next();
-            numerator += current.getAmperage() * current.getVoltage();
-            denominator += current.getAmperage() * current.getAmperage();
+        if (measurements.isEmpty()) {
+            return 0;
         }
-        return numerator / denominator;
+        int n = measurements.size();
+        double sumOfI = 0;
+        double sumOfU = 0;
+        double sumOfUi = 0;
+        double sumOfISquared = 0;
+        for (Measurement m: measurements) {
+            sumOfI += m.getAmperage();
+            sumOfU += m.getVoltage();
+            sumOfUi += m.getVoltage() * m.getAmperage();
+            sumOfISquared += m.getAmperage() * m.getAmperage();
+        }
+        double averageI = sumOfI / n;
+        double averageU = sumOfU / n;
+        double averageUi = sumOfUi / n;
+        double averageISquared = sumOfISquared / n;
+        double res = (averageUi - averageI * averageU) / (averageISquared - averageI * averageI);
+        if (Double.isNaN(res)) {
+            return 0;
+        }
+        return (double) Math.round(res * 1000) / 1000;
+
     }
 }
