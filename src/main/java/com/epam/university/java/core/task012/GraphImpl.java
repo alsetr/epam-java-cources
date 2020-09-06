@@ -32,11 +32,7 @@ public class GraphImpl implements Graph {
     @Override
     public Collection<Integer> getAdjacent(int from) {
         checkArguments(from);
-        Set<Integer> adjacent = new HashSet<>(graph.get(from));
-        for (Integer i : adjacent) {
-            adjacent.addAll(graph.get(i));
-        }
-        return adjacent;
+        return graph.get(from);
     }
 
     private void checkArguments(int from, int to) {

@@ -1,6 +1,6 @@
 package com.epam.university.java.core.task012;
 
-import java.util.Collection;
+import java.util.*;
 
 public class Task012Impl implements Task012 {
     @Override
@@ -20,7 +20,20 @@ public class Task012Impl implements Task012 {
         if (graph == null) {
             throw new IllegalArgumentException();
         }
-        graph.getAdjacent(from);
-        return graph.getAdjacent(from).contains(to);
+        Deque<Integer> searchQueue = new ArrayDeque<>(graph.getAdjacent(from));
+        List<Integer> searched = new ArrayList<>();
+        int vertex;
+        while (!searchQueue.isEmpty()) {
+            vertex = searchQueue.pollFirst();
+            if (!searched.contains(vertex)) {
+                if (vertex == to) {
+                    return true;
+                } else {
+                    searchQueue.addAll(graph.getAdjacent(vertex));
+                    searched.add(vertex);
+                }
+            }
+        }
+        return false;
     }
 }
