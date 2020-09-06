@@ -1,71 +1,55 @@
 package com.epam.university.java.core.task008;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class Task008Impl implements Task008 {
-
-    class MyStack {
-        private List<Character> stack;
-        private int index;
-
-        MyStack () {
-            stack = new ArrayList<>();
-        }
-
-        private void add(Character character) {
-            stack.add(character);
-            System.out.println("Added char " + character);
-            index++;
-            System.out.println(index);
-        }
-
-        private Character pop () {
-            index--;
-            System.out.println("Popped char " + stack.get(index));
-            if (index < 0) {
-                return '~';
-            }
-            System.out.println(index);
-            return stack.get(index);
-        }
-
-        private Character peek () {
-            if (index < 1) {
-                return '~';
-            }
-            System.out.println(index);
-            return stack.get(index - 1);
-        }
-
-    }
-
 
     @Override
     public boolean isValid(String sourceString) {
         if (sourceString == null) {
             throw new IllegalArgumentException();
         }
+        if (sourceString.isEmpty()) {
+            return true;
+        }
         List<Character> openBrackets = new ArrayList<>(Arrays.asList('{', '[', '('));
         List<Character> closeBrackets = new ArrayList<>(Arrays.asList('}', ']', ')'));
-        MyStack myStack = new MyStack();
+        List<Character> myStack = new ArrayList<>();
 
-        for (int i = 0; i < sourceString.length() ; i++) {
-            if (openBrackets.contains(sourceString.charAt(i))) {
+        for (int i = 0; i < sourceString.length(); i++) {
+            if (openBrackets.contains(sourceString.charAt(i))
+                    || closeBrackets.contains(sourceString.charAt(i))) {
                 myStack.add(sourceString.charAt(i));
-            } else if (closeBrackets.contains(sourceString.charAt(i))) {
-                System.out.println("Inside secod if");
-                if ((myStack.peek().equals('~')) || (myStack.peek().equals('{') && sourceString.charAt(i) != '}') ||
-                        (myStack.peek().equals('[') && sourceString.charAt(i) != ']') ||
-                        (myStack.peek().equals('(') && sourceString.charAt(i) != ')')) {
+            }
+        }
+        if (closeBrackets.contains(myStack.get(0))
+                || openBrackets.contains(myStack.get(myStack.size() - 1))) {
+            return false;
+        }
+        Character[] array = new Character[myStack.size()];
+        myStack.toArray(array);
+        System.out.println(Arrays.toString(array));
+        List<Character> checked = new ArrayList<>();
+        for (int i = 0; i < array.length - 1; i++) {
+            if (openBrackets.contains(array[i])) {
+                int k = openBrackets.indexOf(array[i]);
+                if (closeBrackets.contains(array[i + 1])
+                        && closeBrackets.indexOf(array[i + 1]) != k) {
                     return false;
-                } else {
-                    myStack.pop();
+                }
+                for (int j = i; j < array.length; j++) {
+                    if (closeBrackets.indexOf(array[j]) == k) {
+                        checked.add(openBrackets.get(k));
+                        checked.add(closeBrackets.get(k));
+                        continue;
+                    }
                 }
             }
         }
-        return true;
+        System.out.println(Arrays.toString(array));
+        return checked.size() == array.length;
     }
 }
