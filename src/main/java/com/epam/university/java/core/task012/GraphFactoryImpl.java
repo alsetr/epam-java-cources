@@ -7,7 +7,7 @@ public class GraphFactoryImpl implements GraphFactory {
             throw new IllegalArgumentException();
         }
         GraphImpl graph = new GraphImpl();
-        for (int i = 1; i <= vertexesCount ; i++) {
+        for (int i = 1; i <= vertexesCount; i++) {
             graph.createVertex(i);
         }
         return graph;

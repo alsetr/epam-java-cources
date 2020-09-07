@@ -1,7 +1,9 @@
 package com.epam.university.java.core.task013;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 public class FigureImpl implements Figure {
@@ -12,6 +14,7 @@ public class FigureImpl implements Figure {
         figure = new ArrayList<>();
         vertexes = vertexCount;
     }
+
     @Override
     public void addVertex(Vertex vertex) {
         if (figure.size() >= vertexes) {
@@ -22,6 +25,17 @@ public class FigureImpl implements Figure {
 
     @Override
     public Collection<Vertex> getVertexes() {
+        int sumOfx = 0;
+        int sumOFy = 0;
+        for (Vertex v: figure) {
+            sumOfx += v.getX();
+            sumOFy += v.getY();
+        }
+        double averageX = (double) sumOfx / figure.size();
+        double averageY = (double) sumOFy / figure.size();
+        figure.sort(Comparator
+                .comparingDouble(vertex -> Math.atan2(vertex.getY() - averageY,
+                        vertex.getX() - averageX)));
         return figure;
     }
 }

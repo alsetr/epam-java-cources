@@ -1,6 +1,9 @@
 package com.epam.university.java.core.task013;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class Task013Impl implements Task013 {
     @Override
@@ -19,45 +22,49 @@ public class Task013Impl implements Task013 {
         if (figure == null) {
             throw new IllegalArgumentException();
         }
-        List<Vertex> vertexes = new ArrayList<>(figure.getVertexes());
-        myVector ab;
-        myVector bc;
-        myVector cd;
-        double[] vectorProducts = new double[vertexes.size()];
-        ab = vectorCoord(vertexes.get(0), vertexes.get(1));
-        bc = vectorCoord(vertexes.get(1), vertexes.get(2));
-        if (vertexes.size() == 3) {
-            cd = vectorCoord(vertexes.get(2), vertexes.get(0));
-        } else {
-            cd = vectorCoord(vertexes.get(2), vertexes.get(3));
+        if (figure.getVertexes().size() == 3) {
+            return true;
         }
-        vectorProducts[0] = ab.x * bc.y - ab.y * bc.x;
-        vectorProducts[1] = bc.x * cd.y - bc.y * cd.x;
-        vectorProducts[2] = cd.x * ab.y - cd.y * ab.x;
-        System.out.println(Arrays.toString(vectorProducts));
-
-
-//        for (int i = 0; i < 1; i++) {
-//            if (i == vertexes.size() - 1) {
-//                ab = vectorCoord(vertexes.get(i), vertexes.get(0));
-//            }
-//            ab = vectorCoord(vertexes.get(i), vertexes.get(i + 1));
-//            bc = vectorCoord(vertexes.get(i + 1), vertexes.get(i + 2));
-//            double product = ab.x * bc.y - ab.y * bc.x;
-//            System.out.println(product);
-//        }
-        return false;
+        List<Vertex> vertexes = new ArrayList<>(figure.getVertexes());
+        MyVector vector1;
+        MyVector vector2;
+        int vertNum = vertexes.size();
+        double[] vectorProducts = new double[vertexes.size()];
+        for (int i = 0; i < vertNum; i++) {
+            vector1 = vectorCoord(vertexes.get(i), vertexes.get(index(i + 1, vertNum)));
+            vector2 = vectorCoord(vertexes.get(index(i + 1, vertNum)),
+                    vertexes.get(index(i + 2, vertNum)));
+            vectorProducts[i] = vector1.x * vector2.y - vector1.y * vector2.x;
+        }
+        boolean firstSign = isPositive(vectorProducts[0]);
+        for (double d: vectorProducts) {
+            if (isPositive(d) != firstSign) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    private myVector vectorCoord(Vertex a, Vertex b) {
-        myVector v = new myVector();
+    private MyVector vectorCoord(Vertex a, Vertex b) {
+        MyVector v = new MyVector();
         v.x = b.getX() - a.getX();
         v.y = b.getY() - a.getY();
         return v;
     }
 
-    private class myVector {
+    private class MyVector {
         private double x;
         private double y;
+    }
+
+    private int index(int i, int length) {
+        if (i >= length) {
+            return i % length;
+        }
+        return i;
+    }
+
+    private boolean isPositive(double i) {
+        return i >= 0;
     }
 }
