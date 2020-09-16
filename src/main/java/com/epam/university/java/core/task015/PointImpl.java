@@ -23,4 +23,9 @@ public class PointImpl implements Point {
     public void setY(double y) {
         this.y = y;
     }
+
+    @Override
+    public String toString() {
+        return "PointImpl{" + "x=" + x + ", y=" + y + '}';
+    }
 }
