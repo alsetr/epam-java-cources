@@ -1,8 +1,8 @@
 package com.epam.university.java.core.task019;
 
 public class RobotPositionImpl implements RobotPosition {
-    private int x;
-    private int y;
+    private int x = 0;
+    private int y = 0;
 
     @Override
     public int getX() {
