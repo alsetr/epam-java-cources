@@ -1,31 +1,49 @@
 package com.epam.university.java.core.task031;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.nio.Buffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class ClientImpl implements Client {
+    private int port;
+    private Socket socket;
+    private PrintWriter writer;
 
+    public ClientImpl(int port) {
+        this.port = port;
+    }
 
     @Override
     public void sendMessage(String message) {
-//        String preParedMessage = message.replace(" ", "$");
-//        InputStream is = new ByteArrayInputStream(preParedMessage.getBytes());
-        InputStream is = new ByteArrayInputStream(Charset.defaultCharset().encode(message).array());
-        new ByteArrayOutputStream();
-        System.setIn(is);
+        writer.print(message);
+        writer.flush();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     public void start() {
+        try {
+            socket = new Socket("localhost", port);
+            writer = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Override
     public void stop() {
+        try {
+            socket.close();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }
