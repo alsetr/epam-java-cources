@@ -9,6 +9,9 @@ public class Task025Impl implements Task025 {
         if (sourceMessage.isEmpty()) {
             return 0;
         }
+        if (!sourceMessage.startsWith("S")) {
+            throw new IllegalArgumentException();
+        }
         String expected = "SOS";
         int altered = 0;
         String sos;
