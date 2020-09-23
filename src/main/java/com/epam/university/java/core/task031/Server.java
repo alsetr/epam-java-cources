@@ -1,5 +1,7 @@
 package com.epam.university.java.core.task031;
 
+import java.io.IOException;
+
 /**
  * Chat server.
  */
