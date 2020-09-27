@@ -36,10 +36,12 @@ public class Task035Impl implements Task035 {
         return person;
     }
 
-    private class PhoneNumberDeserializer implements JsonDeserializer{
+    private class PhoneNumberDeserializer implements JsonDeserializer {
 
         @Override
-        public Object deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public Object deserialize(JsonElement json, Type typeOfT,
+                                  JsonDeserializationContext context)
+                throws JsonParseException {
             PhoneNumber phoneNumber = new PhoneNumberImpl();
             String data = json.getAsString();
             phoneNumber.setPhoneNumber(data);
