@@ -11,11 +11,55 @@ public class Task027Impl implements Task027 {
         if (sourceString == null) {
             throw new IllegalArgumentException();
         }
-        int[] source = new int[sourceString.length()];
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < sourceString.length(); i++) {
-            source[i] = Integer.parseInt(String.valueOf(sourceString.charAt(i)));
+        List<Integer> trial = new ArrayList<>();
+        boolean isOrdered = false;
+        if (sourceString.charAt(0) == '0') {
+            return trial;
         }
-        return null;
+        for (int i = 1; i < 6; i++) {
+            trial = divideString(sourceString, i);
+            for (int j = 0; j < trial.size() - 1; j++) {
+                if (trial.get(j) + 1 != trial.get(j + 1)) {
+                    break;
+                }
+            }
+            for (int j = 0; j < trial.size() - 1; j++) {
+                if (trial.get(j) + 1 == trial.get(j + 1)) {
+                    isOrdered = true;
+                } else {
+                    isOrdered = false;
+                    break;
+                }
+            }
+            if (isOrdered) {
+                break;
+            }
+        }
+        if (!isOrdered) {
+            return new ArrayList<>();
+        }
+        return trial;
+    }
+
+    private List<Integer> divideString(String source, int digits) {
+        List<Integer> list = new ArrayList<>();
+        String sub;
+        for (int i = 0; i < source.length();) {
+            if (i < source.length() - (digits - 1)) {
+                sub = source.substring(i, i + digits);
+                if (sub.charAt(sub.length() - 1) == '9') {
+                    i = i + digits;
+                    digits += 1;
+                } else {
+                    i = i + digits;
+                }
+                list.add(Integer.parseInt(sub));
+            } else {
+                sub = source.substring(i);
+                list.add(Integer.parseInt(sub));
+                break;
+            }
+        }
+        return list;
     }
 }
