@@ -35,7 +35,6 @@ public class BookServiceImpl implements BookService {
         book.setStateMachineDefinition(stateMachineDefinition);
         stateMachineManager.initStateMachine(book, stateMachineDefinition);
         stateMachineManager.handleEvent(book, BookEvent.CREATE);
-        System.out.println(book.getState());
         return book;
     }
 
@@ -63,7 +62,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book accept(Book book, String number) {
-        book.setId(Integer.parseInt(number));
+        book.setSerialNumber(number);
         stateMachineManager.handleEvent(book, BookEvent.ACCEPT);
         return book;
     }

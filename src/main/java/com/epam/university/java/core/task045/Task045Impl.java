@@ -1,7 +1,7 @@
 package com.epam.university.java.core.task045;
 
-import java.nio.charset.CharsetEncoder;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Task045Impl implements Task045 {
     @Override
@@ -24,35 +24,20 @@ public class Task045Impl implements Task045 {
                     reversed[i] = plain[i];
                 }
             }
-            outer :
-            for (int i = 0; i < plain.length; i++) {
-
-
-
-//                if (Character.isLetter(plain[i])) {
-//                    if (reversed[plain.length - 1 - i] == Character.MIN_VALUE) {
-//                        reversed[plain.length - 1 - i] = plain[i];
-//                    } else {
-//                        int k = plain.length - 1 - i;
-//                        while (reversed[k] != Character.MIN_VALUE) {
-//                            k--;
-//                        }
-//                        reversed[k] = plain[i];
-//                        for (char c : reversed) {
-//                            int count = 0;
-//                            if (c == Character.MIN_VALUE) {
-//                                break;
-//                            } else {
-//                                count++;
-//                            }
-//                            if (count == reversed.length) {
-//                                break outer;
-//                            }
-//                        }
-//                    }
-//                } else {
-//
-//                }
+            List<Character> charList = new ArrayList<>();
+            for (char c : plain) {
+                charList.add(c);
+            }
+            charList.removeIf(character -> !Character.isLetter(character));
+            int index = reversed.length - 1;
+            for (Character c : charList) {
+                if ((reversed[index]) != Character.MIN_VALUE) {
+                    while ((reversed[index]) != Character.MIN_VALUE) {
+                        index--;
+                    }
+                }
+                reversed[index] = c;
+                index--;
             }
             sb.append(reversed);
             sb.append(" ");
