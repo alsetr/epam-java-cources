@@ -78,11 +78,7 @@ public class Task039Impl implements Task039 {
             if (queue.size() == map.size()) {
                 node1 = queue.poll();
                 node2 = queue.poll();
-                if (node1.sum == node2.sum) {
-                    queue.add(new InternalNode(node2, node1));
-                } else {
-                    queue.add(new InternalNode(node1, node2));
-                }
+                queue.add(new InternalNode(node1, node2));
                 continue;
             }
             node1 = queue.poll();
