@@ -3,6 +3,7 @@ package com.epam.university.java.project.service;
 import com.epam.university.java.project.core.cdi.io.Resource;
 import com.epam.university.java.project.core.state.machine.domain.StateMachineDefinition;
 import com.epam.university.java.project.core.state.machine.domain.StateMachineDefinitionImpl;
+import com.epam.university.java.project.core.state.machine.domain.StateMachineState;
 import com.epam.university.java.project.core.state.machine.domain.StatefulEntity;
 import com.epam.university.java.project.core.state.machine.manager.StateMachineManager;
 import com.epam.university.java.project.domain.Book;
@@ -13,10 +14,13 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
 
 public class StateMachineManagerImpl implements StateMachineManager {
     StateMachineDefinition<BookStatus, BookEvent> stateMachineDefinition;
-    BookStateMachineHandler handler = new BookStateMachineHandler();
+    BookStateMachineHandler handler;
 
     @Override
     public StateMachineDefinition<BookStatus, BookEvent> loadDefinition(Resource resource) {
@@ -38,6 +42,13 @@ public class StateMachineManagerImpl implements StateMachineManager {
     public <S, E> StatefulEntity<S, E> initStateMachine(StatefulEntity<S, E> entity,
                                                         StateMachineDefinition<S, E> definition) {
         entity.setStateMachineDefinition(definition);
+        try {
+            handler = (BookStateMachineHandler) stateMachineDefinition.getHandlerClass()
+                    .getConstructor().newInstance();
+        } catch (InstantiationException
+                | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
         return entity;
     }
 
@@ -45,22 +56,31 @@ public class StateMachineManagerImpl implements StateMachineManager {
     @Override
     public <S, E> StatefulEntity<S, E> handleEvent(StatefulEntity<S, E> entity, E event) {
         Book book = (Book) entity;
-        switch ((BookEvent) event) {
-            case ACCEPT:
-                handler.onAccept(book);
-                break;
-            case ISSUE:
-                handler.onIssue(book);
-                break;
-            case RETURN:
-                handler.onReturn(book);
-                break;
-            case CREATE:
-                handler.create(book);
-                break;
-            default:
-                System.out.println("Event not found.");
-                break;
+        StateMachineState<BookStatus, BookEvent> state = null;
+        Collection<StateMachineState<BookStatus, BookEvent>> states = stateMachineDefinition
+                .getStates();
+        if (event == BookEvent.CREATE) {
+            handler.create(book);
+        } else {
+            for (StateMachineState<BookStatus, BookEvent> s : states) {
+                if (event == s.getOn()) {
+                    state = s;
+                    break;
+                }
+            }
+            Method[] declaredMethods = handler.getClass().getDeclaredMethods();
+            for (Method m : declaredMethods) {
+                assert state != null;
+                if (m.getName().equals(state.getMethodToCall())) {
+                    try {
+                        m.invoke(handler, book);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+            }
+
         }
         return (StatefulEntity<S, E>) book;
     }
